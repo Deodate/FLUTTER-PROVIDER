@@ -4,7 +4,7 @@ import 'package:flutter_data_mgnt/model/todo.dart';
 import 'package:http/http.dart' as http;
 
 class TodoServices {
-  void getAll() async {
+  Future<List<Todo>> getAll() async {
     const url = 'https://jsonplaceholder.typicode.com/todos';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
@@ -18,6 +18,9 @@ class TodoServices {
           completed: e['completed'],
         );
       }).toList();
+      return todos;
     }
+    return [];
+    // throw "Something went wrong!";
   }
 }
