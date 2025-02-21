@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../provider/todo_provider.dart';
-// Make sure to import your TodoProvider
 
-class HomePage extends StatefulWidget {  // Changed to StatefulWidget
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
@@ -12,14 +10,14 @@ class HomePage extends StatefulWidget {  // Changed to StatefulWidget
 }
 
 class _HomePageState extends State<HomePage> {
-  @override  // Added @override
+  @override
   void initState() {
-    super.initState();  // Moved super.initState() inside initState
+    super.initState();
     
-    // Wrap Provider call in a Future to avoid calling build context in initState
-    Future.microtask(() {
-      Provider.of<TodoProvider>(context, listen: false).getAllTodos();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+       Provider.of<TodoProvider>(context, listen: false).getAllTodos();
     });
+   
   }
 
   @override
@@ -27,6 +25,23 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Provider API'),
+      ),
+      body: Consumer<TodoProvider>(
+        builder: (context, value, child) {  // Changed 'value' to 'todoProvider'
+           final todos = value.todos;
+           return ListView.builder(
+            itemCount: todos.length,
+            itemBuilder: (context, index){
+                final todo = todos[index];
+              return ListTile(
+                leading: CircleAvatar(
+                  child: Text(todo.id.toString()),
+                ),
+                title: Text(todo.title),
+              );
+            }
+           );
+        },
       ),
     );
   }
