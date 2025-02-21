@@ -28,6 +28,11 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Consumer<TodoProvider>(
         builder: (context, value, child) {  // Changed 'value' to 'todoProvider'
+           if (value.isLoading){
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+           }
            final todos = value.todos;
            return ListView.builder(
             itemCount: todos.length,
@@ -37,12 +42,19 @@ class _HomePageState extends State<HomePage> {
                 leading: CircleAvatar(
                   child: Text(todo.id.toString()),
                 ),
-                title: Text(todo.title),
+                title: Text(
+                  todo.title,
+                  style: TextStyle(
+                    color: todo.completed ? Colors.black : Colors.blue,
+                  ),
+                  ),
               );
             }
            );
-        },
+        
+         }
       ),
+       
     );
   }
 }
